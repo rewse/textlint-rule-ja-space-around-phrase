@@ -153,6 +153,14 @@ export default function reporter(context) {
       const afterIndex = linkEnd;
       if (afterIndex < parentText.length) {
         const afterChar = parentText[afterIndex];
+        // Skip if after character is a symbol (including closing bracket for markdown links)
+        if (isSymbol(afterChar)) {
+          return;
+        }
+        // Skip if link ends with a symbol (like markdown links ending with ')')
+        if (linkEnd > 0 && isSymbol(parentText[linkEnd - 1])) {
+          return;
+        }
         if (isFullWidth(afterChar) && parentText[linkEnd - 1] !== ' ') {
           report(parent, new RuleError(
             `URLと全角文字の間にはスペースを入れる必要があります`,

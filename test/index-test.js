@@ -35,7 +35,10 @@ tester.run("ja-space-around-phrase", rule, {
         "Node.js: CommonJSモジュール",
         "- Node.js: CommonJSモジュール",
         "例: testを実行",
-        "注意: warningが出る"
+        "注意: warningが出る",
+
+        "[その日本語訳](https://www.nic.ad.jp/ja/tech/ipa/RFC2119JA.html)が参考になります",
+        "[ZennのMarkdown記法一覧](https://zenn.dev/zenn/articles/markdown-guide)"
     ],
     invalid: [
         // Missing space before and after phrase
