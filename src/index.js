@@ -33,15 +33,6 @@ function isFullWidth(char) {
 }
 
 /**
- * Check if a character is half-width (excluding spaces)
- * @param {string} char - Character to check
- * @returns {boolean} True if character is half-width
- */
-function isHalfWidth(char) {
-  return !isFullWidth(char) && char !== ' ' && char !== '\t' && char !== '\n';
-}
-
-/**
  * Check if a character is a symbol/punctuation
  * @param {string} char - Character to check
  * @returns {boolean} True if character is a symbol
@@ -53,40 +44,72 @@ function isSymbol(char) {
 }
 
 /**
+ * Check if a character is half-width (excluding spaces and symbols)
+ * @param {string} char - Character to check
+ * @returns {boolean} True if character is half-width
+ */
+function isHalfWidth(char) {
+  return !isFullWidth(char) && char !== ' ' && char !== '\t' && char !== '\n' && !isSymbol(char);
+}
+
+/**
  * Extract half-width sequences from text
  * @param {string} text - Text to analyze
  * @param {number} startIndex - Start index in the original text
- * @returns {Array} Array of half-width sequences with their positions
+ * @returns {Array} Array of half-width sequences with their positions and metadata
  */
 function extractHalfWidthSequences(text, startIndex) {
   const sequences = [];
   let currentSeq = '';
   let seqStart = -1;
+  let startsAfterSymbol = false;
 
   for (let i = 0; i < text.length; i++) {
     const char = text[i];
     if (isHalfWidth(char) || char === ' ' || char === '\t') {
       if (currentSeq === '') {
         seqStart = i;
+        // Check if this sequence starts after a symbol (including symbol + space)
+        startsAfterSymbol = (i > 0 && isSymbol(text[i - 1]));
       }
       currentSeq += char;
+      
+      // Check if next character is a symbol - if so, end the sequence here
+      if (i + 1 < text.length && isSymbol(text[i + 1])) {
+        if (currentSeq !== '') {
+          const trimmedText = currentSeq.trim();
+          sequences.push({
+            text: trimmedText,
+            start: startIndex + seqStart,
+            end: startIndex + i + 1,
+            startsAfterSymbol: startsAfterSymbol
+          });
+          currentSeq = '';
+        }
+      }
     } else {
       if (currentSeq !== '') {
+        const trimmedText = currentSeq.trim();
         sequences.push({
-          text: currentSeq.trim(),
+          text: trimmedText,
           start: startIndex + seqStart,
-          end: startIndex + i
+          end: startIndex + i,
+          startsAfterSymbol: startsAfterSymbol
         });
         currentSeq = '';
       }
+      // Reset startsAfterSymbol when we hit a non-half-width, non-space character
+      startsAfterSymbol = isSymbol(char);
     }
   }
 
   if (currentSeq !== '') {
+    const trimmedText = currentSeq.trim();
     sequences.push({
-      text: currentSeq.trim(),
+      text: trimmedText,
       start: startIndex + seqStart,
-      end: startIndex + text.length
+      end: startIndex + text.length,
+      startsAfterSymbol: startsAfterSymbol
     });
   }
 
@@ -151,6 +174,11 @@ export default function reporter(context) {
       sequences.forEach(seq => {
         // Skip empty sequences
         if (!seq.text) {
+          return;
+        }
+
+        // Skip sequences that start after symbols (like ": CommonJS" after "Node.js:")
+        if (seq.startsAfterSymbol) {
           return;
         }
 

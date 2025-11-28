@@ -29,7 +29,13 @@ tester.run("ja-space-around-phrase", rule, {
         "（hello world）と書く",
         "「hello world」と書く",
         "、hello worldと書く",
-        "？hello worldと書く"
+        "？hello worldと書く",
+        
+        // Colon followed by single word - no space needed
+        "Node.js: CommonJSモジュール",
+        "- Node.js: CommonJSモジュール",
+        "例: testを実行",
+        "注意: warningが出る"
     ],
     invalid: [
         // Missing space before and after phrase
