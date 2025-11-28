@@ -1,0 +1,50 @@
+{
+  "name": "textlint-rule-ja-space-around-phrase",
+  "version": "1.0.0",
+  "description": "textlint rule to check spacing around phrases (multi-word half-width strings) in Japanese text",
+  "keywords": [
+    "textlint",
+    "textlint-rule",
+    "japanese",
+    "spacing",
+    "phrase"
+  ],
+  "license": "MIT",
+  "author": "Tats Shibata <https://github.com/rewse>",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "main": "lib/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "files": [
+    "lib/",
+    "src/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rewse/textlint-rule-ja-space-around-phrase.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rewse/textlint-rule-ja-space-around-phrase/issues"
+  },
+  "homepage": "https://github.com/rewse/textlint-rule-ja-space-around-phrase#readme",
+  "scripts": {
+    "test": "textlint-scripts test",
+    "build": "textlint-scripts build",
+    "prepublish": "npm run --if-present build"
+  },
+  "peerDependencies": {
+    "textlint": "^15.0.0"
+  },
+  "dependencies": {
+    "textlint-rule-helper": "^2.5.0"
+  },
+  "devDependencies": {
+    "@textlint/types": "^15.4.0",
+    "textlint-scripts": "^15.4.0",
+    "textlint-tester": "^15.4.0"
+  }
+}
