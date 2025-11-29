@@ -41,5 +41,5 @@ jobs:
           generate_release_notes: true
           name: Release v${{ steps.version.outputs.VERSION }}
 
-      - name: Publish to npm (with provenance via OIDC)
-        run: npm publish --provenance --access public
+      - name: Publish to npm via OIDC
+        run: npm publish --access public
