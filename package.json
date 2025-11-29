@@ -1,6 +1,6 @@
 {
   "name": "textlint-rule-ja-space-around-phrase",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "textlint rule to check spacing around phrases (multi-word half-width strings) in Japanese text",
   "keywords": [
     "textlint",
