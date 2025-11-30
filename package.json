@@ -46,8 +46,9 @@
     "textlint-rule-helper": "^2.5.0"
   },
   "devDependencies": {
+    "@textlint/textlint-plugin-markdown": "^15.4.0",
     "@textlint/types": "^15.4.0",
-    "textlint-scripts": "^15.4.0",
-    "textlint-tester": "^15.4.0"
+    "fast-check": "^4.3.0",
+    "textlint-scripts": "^15.4.0"
   }
 }

@@ -3,16 +3,22 @@
 ## 言語とランタイム
 
 - **Node.js**: 最小バージョン要件あり（package.json参照）
-- **JavaScript**: CommonJS形式
+- **JavaScript**: ES6 import/export（ソース）、CommonJS（ビルド後）
 - **モジュールシステム**: CommonJS (`type: "commonjs"`)
 
 ## 主要ライブラリ
 
+### 本番依存
+
 - **textlint**: peerDependency
 - **textlint-rule-helper**: ルール開発用ヘルパー
+
+### 開発依存
+
 - **@textlint/types**: TypeScript型定義
-- **textlint-tester**: ルールのテストフレームワーク
+- **@textlint/textlint-plugin-markdown**: テスト用Markdownプラグイン
 - **textlint-scripts**: ビルドとテストのスクリプト
+- **fast-check**: プロパティベーステスト
 
 ## ビルドシステム
 
@@ -35,16 +41,17 @@ npm run prepublish
 
 - **src/**: ソースコード（ES6 import/export使用）
 - **lib/**: ビルド済みコード（CommonJS形式）
-- **test/**: テストコード
+- **test/**: テストコード（例示ベース + プロパティベース）
 - **package.json**: メインエントリーポイントは `lib/index.js`
 
 ## 開発フロー
 
 1. `src/index.js`でルールを実装
-2. `test/index-test.js`でテストを記述
-3. `npm test`でテスト実行
-4. `npm run build`でビルド
-5. 公開時は`lib/`と`src/`の両方を含める
+2. `test/example-test.js`で例示ベースのテストを記述
+3. `test/pbt-test.js`でプロパティベーステストを記述
+4. `npm test`でテスト実行
+5. `npm run build`でビルド
+6. 公開時は`lib/`と`src/`の両方を含める
 
 ## リリース方法
 

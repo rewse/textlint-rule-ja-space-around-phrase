@@ -8,24 +8,33 @@
 
 1. **単語（スペースを含まない半角文字列）の場合**
    - 全角文字と単語の間にはスペースを入れない
-   - ✅ `これはtestです`
-   - ❌ `これは testです`
+   - OK: `これはtestです`
+   - NG: `これは testです`
 
 2. **フレーズ（スペースを含む半角文字列）の場合**
    - 全角文字とフレーズの間にはスペースを入れる
-   - ✅ `これは hello world です`
-   - ❌ `これはhello worldです`
+   - OK: `これは hello world です`
+   - NG: `これはhello worldです`
 
 3. **URLの場合**
    - 全角文字とURLの間には常にスペースを入れる
-   - ✅ `詳細は https://example.com を参照`
-   - ❌ `詳細はhttps://example.comを参照`
+   - OK: `詳細は https://example.com を参照`
+   - NG: `詳細はhttps://example.comを参照`
 
-4. **記号の前後**
+4. **メールアドレスの場合**
+   - 全角文字とメールアドレスの間には常にスペースを入れる
+   - OK: `メアドは foo@example.com です`
+   - NG: `メアドはfoo@example.comです`
+
+5. **Markdownリンクの場合**
+   - `[テキスト](URL)`形式のリンクはスペース不要（括弧が視覚的な区切りを提供）
+   - OK: `これは[リンク](https://example.com)です`
+
+6. **記号の前後**
    - 記号の直前・直後の半角文字列はスペースチェックの対象外
-   - ✅ `（test）は正しい`
-   - ✅ `（hello world）と書く`
-   - ✅ `「test」や。test、！test`
+   - OK: `（test）は正しい`
+   - OK: `（hello world）と書く`
+   - OK: `「test」や。test、！test`
    - 対象記号: `.,;:!?()[]{}「」『』【】、。！？` など
 
 ## Install
@@ -62,6 +71,8 @@ textlint --rule ja-space-around-phrase README.md
 これは hello world です
 日本語 test case を含む
 詳細は https://example.com を参照
+メアドは foo@example.com です
+これは[リンク](https://example.com)です
 
 # 記号の前後はチェック対象外
 （test）は正しい
@@ -80,6 +91,9 @@ textlint --rule ja-space-around-phrase README.md
 
 詳細はhttps://example.comを参照
 → 全角文字とURLの間にはスペースを入れる必要があります
+
+メアドはfoo@example.comです
+→ メールアドレスと全角文字の間にはスペースを入れる必要があります
 ```
 
 ## Development

@@ -10,7 +10,8 @@
 │   ├── index.js      # ビルド済みルール
 │   └── index.js.map  # ソースマップ
 ├── test/             # テストコード
-│   └── index-test.js # ルールのテスト
+│   ├── example-test.js # 例示ベースのテスト
+│   └── pbt-test.js     # プロパティベーステスト
 ├── node_modules/     # 依存パッケージ
 ├── .git/             # Gitリポジトリ
 ├── .kiro/            # Kiro設定
@@ -29,15 +30,26 @@
 textlintルールの実装。以下の構造を持つ：
 
 - **reporter関数**: ルールのエントリーポイント
-- **ヘルパー関数**: 文字判定、シーケンス抽出など
-- **ノードハンドラ**: `Syntax.Link`と`Syntax.Str`を処理
+- **ヘルパー関数**: 文字判定（`isFullWidth`, `isSymbol`, `isUrl`, `isEmail`）、シーケンス抽出など
+- **ノードハンドラ**: `Syntax.Link`（URL/メールアドレス）と`Syntax.Str`（テキスト）を処理
 
-### test/index-test.js
+### test/example-test.js
 
-textlint-testerを使用したテスト。以下を含む：
+textlint-testerを使用した例示ベースのテスト。以下を含む：
 
 - **valid**: 正しい例（エラーなし）
 - **invalid**: 誤った例（エラーあり）
+
+### test/pbt-test.js
+
+fast-checkを使用したプロパティベーステスト。以下のプロパティを検証：
+
+- 単語（スペースなし）のスペーシング
+- フレーズ（スペースあり）のスペーシング
+- 全角のみ/半角のみのテキスト
+- 記号境界の処理
+- URL/メールアドレスの処理
+- Markdownリンクの処理
 
 ### lib/
 
@@ -45,8 +57,8 @@ textlint-testerを使用したテスト。以下を含む：
 
 ## 命名規則
 
-- **ファイル名**: kebab-case（例: `index-test.js`）
-- **関数名**: camelCase（例: `containsSpaces`, `isFullWidth`）
+- **ファイル名**: kebab-case（例: `example-test.js`）
+- **関数名**: camelCase（例: `isFullWidth`, `isSymbol`, `extractUrlOrEmail`）
 - **定数**: UPPER_SNAKE_CASE（該当なし）
 
 ## コーディング規約
