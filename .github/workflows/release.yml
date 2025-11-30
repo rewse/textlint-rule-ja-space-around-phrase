@@ -34,15 +34,13 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: Extract version from tag
-        id: version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: release-drafter/release-drafter@v6
         with:
-          generate_release_notes: true
-          name: Release v${{ steps.version.outputs.VERSION }}
+          publish: true
+          tag: ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to npm via Trusted Publishing
         run: npm publish --provenance --access public
