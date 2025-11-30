@@ -40,15 +40,15 @@
     "release:major": "npm version major && git push && git push --tags"
   },
   "peerDependencies": {
-    "textlint": "^15.0.0"
+    "textlint": ">=15.0.0"
   },
   "dependencies": {
-    "textlint-rule-helper": "^2.5.0"
+    "textlint-rule-helper": ">=2.5.0"
   },
   "devDependencies": {
-    "@textlint/textlint-plugin-markdown": "^15.4.0",
-    "@textlint/types": "^15.4.0",
-    "fast-check": "^4.3.0",
-    "textlint-scripts": "^15.4.0"
+    "@textlint/textlint-plugin-markdown": ">=15.4.0",
+    "@textlint/types": ">=15.4.0",
+    "fast-check": ">=4.3.0",
+    "textlint-scripts": ">=15.4.0"
   }
 }
