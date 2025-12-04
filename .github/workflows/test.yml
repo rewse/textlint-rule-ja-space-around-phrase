@@ -6,6 +6,11 @@ on:
       - main
   pull_request:
 
+permissions:
+  actions: read
+  security-events: write
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -35,7 +40,9 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: Run OSV-Scanner
-        uses: google/osv-scanner-action@v2.3.0
-        with:
-          scan-args: --lockfile package-lock.json
+  osv-scan:
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.3.0
+    with:
+      scan-args: |-
+        --recursive
+        ./
