@@ -202,13 +202,9 @@ Googleが運営するOSV（Open Source Vulnerabilities）データベースを�
 GitHub Actionsワークフローには、OSV-Scannerによる脆弱性スキャンを含めなければなりません (MUST)：
 
 ```yaml
-- name: Run OSV-Scanner
-  uses: google/osv-scanner-action@v1
-  with:
-    scan-args: --lockfile package-lock.json
+osv-scan:
+  uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.3.0
 ```
-
-プルリクエストごとに自動的に実行されます。
 
 #### ローカルでの使用
 

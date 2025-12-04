@@ -1,10 +1,14 @@
-name: Test
+name: Security Scan
 
 on:
   push:
     branches:
       - main
   pull_request:
+    branches:
+      - main
+  schedule:
+  - cron: "36 11 * * 3"  # Every Wednesday at 20:36 JST (11:36 UTC)
 
 permissions:
   actions: read
@@ -12,7 +16,7 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  security-scan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -42,7 +46,3 @@ jobs:
 
   osv-scan:
     uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.3.0
-    with:
-      scan-args: |-
-        --recursive
-        ./
