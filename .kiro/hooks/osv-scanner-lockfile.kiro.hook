@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "OSV Scanner on package-lock.json",
+  "description": "Run osv-scanner to check for vulnerabilities in dependencies when package-lock.json is updated",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "package-lock.json"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "osv-scanner --lockfile package-lock.json"
+  },
+  "shortName": "osv-scanner-lockfile"
+}
