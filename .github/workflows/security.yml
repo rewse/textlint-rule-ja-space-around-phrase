@@ -1,4 +1,4 @@
-name: Test
+name: Security
 
 on:
   push:
@@ -36,6 +36,6 @@ jobs:
         run: npm test
 
       - name: Run OSV-Scanner
-        uses: google/osv-scanner-action@v1
+        uses: google/osv-scanner-action@v2.3.0
         with:
           scan-args: --lockfile package-lock.json
