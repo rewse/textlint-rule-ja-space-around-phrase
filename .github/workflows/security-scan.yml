@@ -8,7 +8,7 @@ on:
     branches:
       - main
   schedule:
-  - cron: "36 11 * * 3"  # Every Wednesday at 20:36 JST (11:36 UTC)
+    - cron: "36 11 * * 3"  # Every Wednesday at 20:36 JST (11:36 UTC)
 
 permissions:
   actions: read
