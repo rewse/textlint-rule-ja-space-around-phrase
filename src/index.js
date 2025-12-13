@@ -133,6 +133,8 @@ function checkBoundary({text, seq, position}) {
         message: '全角文字とスペースを含む半角文字列の間にはスペースを入れる必要があります: ' +
           '"' + charBefore + preview + '..."',
         index: seq.start,
+        fixType: 'insertSpace',
+        fixIndex: seq.start,
       };
     }
     if (!isPhrase && hasLeadingSpace) {
@@ -141,6 +143,9 @@ function checkBoundary({text, seq, position}) {
         message: '全角文字とスペースを含まない半角文字列の間にはスペースを入れないでください: ' +
           '"' + charBefore + ' ' + seq.text + '"',
         index: seq.rawStart,
+        fixType: 'removeSpace',
+        fixIndex: seq.rawStart,
+        fixLength: seq.start - seq.rawStart, // Length of spaces to remove
       };
     }
   }
@@ -158,6 +163,8 @@ function checkBoundary({text, seq, position}) {
         message: '全角文字とスペースを含む半角文字列の間にはスペースを入れる必要があります: ' +
           '"...' + preview + charAfter + '"',
         index: seq.end,
+        fixType: 'insertSpace',
+        fixIndex: seq.end,
       };
     }
     if (!isPhrase && hasTrailingSpace) {
@@ -166,6 +173,9 @@ function checkBoundary({text, seq, position}) {
         message: '全角文字とスペースを含まない半角文字列の間にはスペースを入れないでください: ' +
           '"' + seq.text + ' ' + charAfter + '"',
         index: seq.end,
+        fixType: 'removeSpace',
+        fixIndex: seq.end,
+        fixLength: seq.rawEnd - seq.end, // Length of spaces to remove
       };
     }
   }
@@ -234,7 +244,7 @@ function extractUrlOrEmail(text) {
  * @return {Object} Rule handlers
  */
 export function reporter(context) {
-  const {Syntax, RuleError, report, getSource, locator} = context;
+  const {Syntax, RuleError, report, getSource, locator, fixer} = context;
   const helper = new RuleHelper(context);
 
   return {
@@ -256,7 +266,10 @@ export function reporter(context) {
           const label = type === 'email' ? 'メールアドレス' : 'URL';
           report(parent, new RuleError(
             '全角文字と' + label + 'の間にはスペースを入れる必要があります',
-            {padding: locator.at(linkStart)}
+            {
+              padding: locator.at(linkStart),
+              fix: fixer.replaceTextRange([linkStart, linkStart], ' ')
+            }
           ));
         }
       }
@@ -272,7 +285,10 @@ export function reporter(context) {
           const label = type === 'email' ? 'メールアドレス' : 'URL';
           report(node, new RuleError(
             label + 'と全角文字の間にはスペースを入れる必要があります',
-            {padding: locator.at(content.length)}
+            {
+              padding: locator.at(content.length),
+              fix: fixer.replaceTextRange([content.length, content.length], ' ')
+            }
           ));
         }
       } else if (linkEnd < parentText.length) {
@@ -282,7 +298,10 @@ export function reporter(context) {
           const label = type === 'email' ? 'メールアドレス' : 'URL';
           report(parent, new RuleError(
             label + 'と全角文字の間にはスペースを入れる必要があります',
-            {padding: locator.at(linkEnd)}
+            {
+              padding: locator.at(linkEnd),
+              fix: fixer.replaceTextRange([linkEnd, linkEnd], ' ')
+            }
           ));
         }
       }
@@ -306,15 +325,35 @@ export function reporter(context) {
 
         const beforeError = checkBoundary({text, seq, position: 'before'});
         if (beforeError) {
+          let fix;
+          if (beforeError.fixType === 'insertSpace') {
+            // Insert space before the sequence
+            fix = fixer.replaceTextRange([beforeError.fixIndex, beforeError.fixIndex], ' ');
+          } else if (beforeError.fixType === 'removeSpace') {
+            // Remove spaces before the sequence
+            fix = fixer.replaceTextRange([beforeError.fixIndex, beforeError.fixIndex + beforeError.fixLength], '');
+          }
+          
           report(node, new RuleError(beforeError.message, {
             padding: locator.at(beforeError.index),
+            fix: fix
           }));
         }
 
         const afterError = checkBoundary({text, seq, position: 'after'});
         if (afterError) {
+          let fix;
+          if (afterError.fixType === 'insertSpace') {
+            // Insert space after the sequence
+            fix = fixer.replaceTextRange([afterError.fixIndex, afterError.fixIndex], ' ');
+          } else if (afterError.fixType === 'removeSpace') {
+            // Remove spaces after the sequence
+            fix = fixer.replaceTextRange([afterError.fixIndex, afterError.fixIndex + afterError.fixLength], '');
+          }
+          
           report(node, new RuleError(afterError.message, {
             padding: locator.at(afterError.index),
+            fix: fix
           }));
         }
       }
@@ -322,4 +361,7 @@ export function reporter(context) {
   };
 }
 
-export default reporter;
+export default {
+  linter: reporter,
+  fixer: reporter
+};

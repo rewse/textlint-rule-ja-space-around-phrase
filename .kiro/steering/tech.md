@@ -53,6 +53,56 @@ npm run prepublish
 5. `npm run build`でビルド
 6. 公開時は`lib/`と`src/`の両方を含める
 
+## 自動修正機能のテスト
+
+このルールは自動修正機能（auto-fix）を実装している。以下の方法でテストできる。
+
+### Kernelを使った直接テスト
+
+`test/kernel-test.js`を使用して、textlintのKernelを直接使ったテストが可能：
+
+```bash
+# ビルド後にKernelテストを実行
+npm run build
+node test/kernel-test.js
+```
+
+#### テストファイル構造
+
+```
+test/
+├── kernel-test.js           # Kernelテストスクリプト
+├── fixtures/
+│   ├── test-input.md       # テスト入力ファイル（スペーシングエラーあり）
+│   └── test-expected.md    # 期待される修正結果
+├── example-test.js         # 例示ベーステスト
+└── pbt-test.js            # プロパティベーステスト
+```
+
+このテストでは以下を確認できる：
+- エラー検出の動作
+- 自動修正の動作
+- 修正前後のテキスト比較
+- 期待される結果との一致確認
+- 適用された修正の数
+- 残存するエラーの数
+
+### テスト内容
+
+Kernelテストでは以下のスペーシングルールをテストする：
+
+1. **単語（スペースなし）**: `これは test です。` → `これはtestです。`
+2. **フレーズ（スペースあり）**: `日本語hello worldテスト。` → `日本語 hello world テスト。`
+3. **URL**: `詳細はhttps://example.comを参照。` → `詳細は https://example.com を参照。`
+4. **メールアドレス**: `メアドはfoo@example.comです。` → `メアドは foo@example.com です。`
+
+### 自動修正の仕組み
+
+- `fixer.replaceTextRange()`を使用してテキストの範囲を置換
+- スペースの挿入: `fixer.replaceTextRange([index, index], ' ')`
+- スペースの削除: `fixer.replaceTextRange([start, end], '')`
+- 各エラーメッセージに`fix`プロパティを含めることで自動修正を有効化
+
 ## リリース方法
 
 このプロジェクトはGitHub ActionsとTrusted Publishingを使用した自動リリースを採用している。
