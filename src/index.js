@@ -176,10 +176,25 @@ function checkBoundary({text, seq, position}) {
 /**
  * Check if a Link node is a plain URL/email (auto-link) vs markdown link
  * @param {string} source - Source text of the node
+ * @param {string} parentText - Parent node text
+ * @param {number} linkStart - Link start position in parent text
  * @return {boolean}
  */
-function isAutoLink(source) {
-  return !source.startsWith('[');
+function isAutoLink(source, parentText, linkStart) {
+  // If source starts with '[', it's definitely a markdown link
+  if (source.startsWith('[')) {
+    return false;
+  }
+  
+  // Check if this link is preceded by '](' which indicates markdown link
+  if (linkStart >= 2) {
+    const precedingChars = parentText.substring(linkStart - 2, linkStart);
+    if (precedingChars === '](') {
+      return false;
+    }
+  }
+  
+  return true;
 }
 
 /**
@@ -228,10 +243,10 @@ export function reporter(context) {
       if (!parent) return;
 
       const source = getSource(node);
-      if (!isAutoLink(source)) return;
-
       const parentText = getSource(parent);
       const linkStart = node.range[0] - parent.range[0];
+      
+      if (!isAutoLink(source, parentText, linkStart)) return;
 
       // Check before link
       if (linkStart > 0) {

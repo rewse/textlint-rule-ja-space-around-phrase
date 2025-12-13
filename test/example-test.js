@@ -121,6 +121,10 @@ tester.run('ja-space-around-phrase', rule, {
     '[リンク1](https://one.com)と[リンク2](https://two.com)を見て',
     '詳細[ページA](https://a.example.com)および[ページB](https://b.example.com)を参照',
     '[公式](https://official.com)と[非公式](https://unofficial.com)を比較',
+    '基本的な使い方については[Kiro公式ドキュメント](https://kiro.dev/docs/)を参照してください',
+    'この記事はKiroやその他のAIコーディングツールを使ったことがある方、事前知識がある方を対象としています。基本的な使い方については[Kiro公式ドキュメント](https://kiro.dev/docs/)を参照してください。',
+    '[Home Assistant](https://www.home-assistant.io/) というソフトを使っています',
+    '[Octoverse 2025](https://github.com/blog/news-insights/octoverse/) によると',
 
     // === Symbol boundary (no check needed) ===
     '（test）',
