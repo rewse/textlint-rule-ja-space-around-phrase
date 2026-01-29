@@ -50,5 +50,8 @@
     "@textlint/types": ">=15.4.0",
     "fast-check": ">=4.3.0",
     "textlint-scripts": ">=15.4.0"
+  },
+  "overrides": {
+    "diff": ">=8.0.3"
   }
 }
