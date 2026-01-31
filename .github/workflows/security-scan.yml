@@ -45,4 +45,4 @@ jobs:
         run: npm test
 
   osv-scan:
-    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.3.1
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.3.2
