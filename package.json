@@ -53,6 +53,7 @@
   },
   "overrides": {
     "diff": ">=8.0.3",
+    "hono": ">=4.12.14",
     "serialize-javascript": ">=7.0.5"
   }
 }
