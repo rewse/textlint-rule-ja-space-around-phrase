@@ -1,116 +1,85 @@
 # textlint-rule-ja-space-around-phrase
 
-日本語テキスト内の全角文字と半角文字列の間のスペースをチェックするtextlintルールです。
+日本語の文中で、全角文字と半角文字列の間のスペースをチェックする textlint ルールです。半角文字列がスペースを含まない単語か、スペースを含むフレーズかによって、スペースの要否を切り替えます。`--fix` による自動修正に対応しています。
 
 ## ルール
 
-このルールは以下のスペーシング規則を適用します：
+| 対象 | スペース | OK | NG |
+|---|---|---|---|
+| 単語（スペースを含まない半角文字列） | 入れない | `これはtestです` | `これは testです` |
+| フレーズ（スペースを含む半角文字列） | 入れる | `これは hello world です` | `これはhello worldです` |
+| URL | 入れる | `詳細は https://example.com を参照` | `詳細はhttps://example.comを参照` |
+| メールアドレス | 入れる | `メアドは foo@example.com です` | `メアドはfoo@example.comです` |
+| Markdown リンク `[テキスト](URL)` | 不要 | `これは[リンク](https://example.com)です` | なし |
 
-1. **単語（スペースを含まない半角文字列）の場合**
-   - 全角文字と単語の間にはスペースを入れない
-   - OK: `これはtestです`
-   - NG: `これは testです`
+Markdown リンクは括弧が区切りになるため、スペースを入れなくてもエラーになりません。
 
-2. **フレーズ（スペースを含む半角文字列）の場合**
-   - 全角文字とフレーズの間にはスペースを入れる
-   - OK: `これは hello world です`
-   - NG: `これはhello worldです`
+記号に隣接する側はチェックしません。たとえば `（test）は正しい`、`（hello world）と書く`、`「test」や。test、！test` はいずれもエラーになりません。対象となる記号は、`.,;:!?()[]{}` などの半角記号、`（）「」『』【】` などの括弧類、`、。！？・…` などの句読点、矢印や `●★` などの図形記号です。
 
-3. **URLの場合**
-   - 全角文字とURLの間には常にスペースを入れる
-   - OK: `詳細は https://example.com を参照`
-   - NG: `詳細はhttps://example.comを参照`
+## インストール
 
-4. **メールアドレスの場合**
-   - 全角文字とメールアドレスの間には常にスペースを入れる
-   - OK: `メアドは foo@example.com です`
-   - NG: `メアドはfoo@example.comです`
+textlint 15 以降と Node.js 20 以降が必要です。
 
-5. **Markdownリンクの場合**
-   - `[テキスト](URL)`形式のリンクはスペース不要（括弧が視覚的な区切りを提供）
-   - OK: `これは[リンク](https://example.com)です`
+```bash
+npm install --save-dev textlint textlint-rule-ja-space-around-phrase
+```
 
-6. **記号の前後**
-   - 記号の直前・直後の半角文字列はスペースチェックの対象外
-   - OK: `（test）は正しい`
-   - OK: `（hello world）と書く`
-   - OK: `「test」や。test、！test`
-   - 対象記号: `.,;:!?()[]{}「」『』【】、。！？` など
+## 使い方
 
-## Install
-
-Install with [npm](https://www.npmjs.com/):
-
-    npm install textlint-rule-ja-space-around-phrase
-
-## Usage
-
-`.textlintrc.json`で設定（推奨）
+`.textlintrc.json` でルールを有効にします。
 
 ```json
 {
-    "rules": {
-        "ja-space-around-phrase": true
-    }
+  "rules": {
+    "ja-space-around-phrase": true
+  }
 }
 ```
 
-CLIで直接使用
+設定ファイルを使わずに CLI で指定することもできます。
 
 ```bash
-textlint --rule ja-space-around-phrase README.md
+npx textlint --rule ja-space-around-phrase README.md
 ```
 
-## Examples
+`--fix` を付けると、スペースの挿入と削除を自動で修正します。
 
-### 正しい例
-
-```markdown
-これはtestです
-日本語textを含む
-これは hello world です
-日本語 test case を含む
-詳細は https://example.com を参照
-メアドは foo@example.com です
-これは[リンク](https://example.com)です
-
-# 記号の前後はチェック対象外
-（test）は正しい
-（hello world）と書く
-「test」や。test、！test
+```bash
+npx textlint --fix README.md
 ```
 
-### 誤った例
+## エラーメッセージ
 
-```markdown
-これは testです
-→ 全角文字とスペースを含まない半角文字列の間にはスペースを入れないでください
+| 入力 | メッセージ |
+|---|---|
+| `これは testです` | 全角文字とスペースを含まない半角文字列の間にはスペースを入れないでください |
+| `これはhello worldです` | 全角文字とスペースを含む半角文字列の間にはスペースを入れる必要があります |
+| `詳細はhttps://example.comを参照` | 全角文字とURLの間にはスペースを入れる必要があります / URLと全角文字の間にはスペースを入れる必要があります |
+| `メアドはfoo@example.comです` | 全角文字とメールアドレスの間にはスペースを入れる必要があります / メールアドレスと全角文字の間にはスペースを入れる必要があります |
 
-これはhello worldです
-→ 全角文字とスペースを含む半角文字列の間にはスペースを入れる必要があります
+前後の両方が誤っている場合は、それぞれの位置でエラーを報告します。
 
-詳細はhttps://example.comを参照
-→ 全角文字とURLの間にはスペースを入れる必要があります
+## 開発
 
-メアドはfoo@example.comです
-→ メールアドレスと全角文字の間にはスペースを入れる必要があります
-```
-
-## Development
-
-### Build
-
-`src/`フォルダのソースコードを`lib/`フォルダにビルドします。
+`src/` のソースを `lib/` にビルドします。
 
 ```bash
 npm run build
 ```
 
-### Tests
-
-`test/`フォルダのテストコードを実行します。
-[textlint-tester](https://github.com/textlint/textlint-tester)を使用してルールをテストします。
+[textlint-tester](https://github.com/textlint/textlint-tester) による例示テストと、[fast-check](https://github.com/dubzzz/fast-check) によるプロパティベーステストを実行します。
 
 ```bash
 npm test
 ```
+
+自動修正の結果は、ビルド後に textlint のカーネルを直接使って確認できます。`test/fixtures/test-input.md` を修正した結果を `test/fixtures/test-expected.md` と比較します。
+
+```bash
+npm run build
+node test/kernel-test.js
+```
+
+## ライセンス
+
+MIT
