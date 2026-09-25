@@ -220,6 +220,34 @@ tester.run('ja-space-around-phrase', rule, {
     'サーバー hello world クライアント',
     'データー foo bar 処理',
     'コンピューター abc def 機器',
+
+    // === Line breaks and ideographic spaces are not boundary spaces ===
+    '日本語\nhelloです',
+    '日本語\nhello world です',
+    'これはhello\n日本語',
+    '日本語　testです',
+    '日本語　hello world です',
+
+    // === Half-width phrases containing ASCII punctuation ===
+    'これは hello, world です',
+    'これは don\'t worry です',
+    '例: fooです',
+    'バージョンv1.0.0です',
+
+    // === Characters outside the BMP and CJK Extension A are full-width ===
+    '𠮷野家testです',
+    '㐀testです',
+
+    // === Half-width katakana is not full-width ===
+    'ｱ test ｲ',
+
+    // === Angle-bracket autolinks are delimited by the brackets ===
+    '<https://example.com>を参照',
+    '詳細は<https://example.com>を参照',
+
+    // === Links in skipped nodes are not checked ===
+    '# 詳細はhttps://example.comを参照',
+    '> 詳細はhttps://example.comを参照',
   ],
   invalid: [
     // === Single word with space (incorrect - should not have space) ===
@@ -416,5 +444,20 @@ tester.run('ja-space-around-phrase', rule, {
     {text: 'コンピューターabc def機器', output: 'コンピューター abc def 機器', errors: [{}, {}]},
     {text: 'プレイヤーtest case再生', output: 'プレイヤー test case 再生', errors: [{}, {}]},
     {text: 'メモリーhello world容量', output: 'メモリー hello world 容量', errors: [{}, {}]},
+
+    // === Only the side adjacent to a symbol is skipped ===
+    {text: '「test です', output: '「testです', errors: [{}]},
+    {text: '「hello worldです', output: '「hello world です', errors: [{}]},
+    {text: '日本語 test」', output: '日本語test」', errors: [{}]},
+    {text: '日本語hello world」', output: '日本語 hello world」', errors: [{}]},
+
+    // === Half-width phrases containing ASCII punctuation ===
+    {text: 'これはhello, worldです', output: 'これは hello, world です', errors: [{}, {}]},
+    {text: 'これはdon\'t worryです', output: 'これは don\'t worry です', errors: [{}, {}]},
+
+    // === Characters outside the BMP and CJK Extension A are full-width ===
+    {text: '𠮷 testです', output: '𠮷testです', errors: [{}]},
+    {text: '𠮷hello worldです', output: '𠮷 hello world です', errors: [{}, {}]},
+    {text: '㐀 testです', output: '㐀testです', errors: [{}]},
   ],
 });

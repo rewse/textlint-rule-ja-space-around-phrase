@@ -16,13 +16,14 @@ User-facing error messages are written in Japanese; everything else in code (com
 
 - `src/index.js` holds the whole rule. It exports `reporter` and a default `{linter, fixer}` object; the default export is what textlint loads, so keep it even though the style guide prefers named exports.
 - The Markdown parser turns plain URLs and emails into `Link` nodes whose text may swallow trailing Japanese (`https://example.comを参照` becomes one node). `extractUrlOrEmail()` recovers the real URL/email and checks the character after it. `Str` nodes inside `Link` nodes are skipped to avoid duplicate reports.
+- Only ASCII spaces and tabs count as boundary spaces; a line break or an ideographic space is not checked, so fixes never join lines.
 - Fixes go through `fixer.replaceTextRange()`, and positions are reported with `padding: locator.at(...)`.
 
 ## Build and test
 
 - `src/` is ESM source; `npm run build` (textlint-scripts) emits CommonJS to `lib/`, which is git-ignored and is the published entry point. Both `lib/` and `src/` are published.
-- `npm test` runs `test/example-test.js` (textlint-tester valid/invalid cases) and `test/pbt-test.js` (fast-check property-based tests). Add cases to both when changing spacing behavior.
-- `test/kernel-test.js` exercises auto-fix end to end through `@textlint/kernel` against the built `lib/`: run `npm run build && node test/kernel-test.js`. It compares `test/fixtures/test-input.md` with `test/fixtures/test-expected.md`, so update the expected fixture when fix output intentionally changes.
+- `npm test` runs `test/example-test.js` (textlint-tester valid/invalid cases), `test/pbt-test.js` (fast-check property-based tests), and `test/kernel-test.js`, which fixes `test/fixtures/test-input.md` through `@textlint/kernel` and compares the result with `test/fixtures/test-expected.md`. Add cases to the example and property tests when changing spacing behavior, and update the expected fixture when fix output intentionally changes.
+- Test files are transpiled by textlint-scripts' Babel setup, which rejects `fs` calls it cannot evaluate statically; read files with `fs/promises` in tests.
 
 ## Coding style
 

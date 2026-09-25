@@ -12,7 +12,9 @@
 | メールアドレス | 入れる | `メアドは foo@example.com です` | `メアドはfoo@example.comです` |
 | Markdown リンク `[テキスト](URL)` | 不要 | `これは[リンク](https://example.com)です` | なし |
 
-Markdown リンクは括弧が区切りになるため、スペースを入れなくてもエラーになりません。
+Markdown リンクと `<URL>` 形式の自動リンクは括弧が区切りになるため、スペースを入れなくてもエラーになりません。
+
+スペースとして数えるのは半角スペースとタブだけです。改行や全角スペースに隣接する側はチェックしないため、和文の途中で折り返した行が自動修正で連結されることはありません。
 
 記号に隣接する側はチェックしません。たとえば `（test）は正しい`、`（hello world）と書く`、`「test」や。test、！test` はいずれもエラーになりません。対象となる記号は、`.,;:!?()[]{}` などの半角記号、`（）「」『』【】` などの括弧類、`、。！？・…` などの句読点、矢印や `●★` などの図形記号です。
 
@@ -67,17 +69,10 @@ npx textlint --fix README.md
 npm run build
 ```
 
-[textlint-tester](https://github.com/textlint/textlint-tester) による例示テストと、[fast-check](https://github.com/dubzzz/fast-check) によるプロパティベーステストを実行します。
+[textlint-tester](https://github.com/textlint/textlint-tester) による例示テスト、[fast-check](https://github.com/dubzzz/fast-check) によるプロパティベーステスト、自動修正の結果を `test/fixtures/test-expected.md` と比較するテストを実行します。
 
 ```bash
 npm test
-```
-
-自動修正の結果は、ビルド後に textlint のカーネルを直接使って確認できます。`test/fixtures/test-input.md` を修正した結果を `test/fixtures/test-expected.md` と比較します。
-
-```bash
-npm run build
-node test/kernel-test.js
 ```
 
 ## ライセンス
