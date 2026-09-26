@@ -1,4 +1,4 @@
-name: Dependency Scan
+name: Test
 
 on:
   push:
@@ -7,16 +7,14 @@ on:
   pull_request:
     branches:
       - main
-  schedule:
-    - cron: "36 11 * * 3"  # Every Wednesday at 20:36 JST (11:36 UTC)
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  safe-chain:
-    name: Aikido Safe Chain Scan
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,10 +33,8 @@ jobs:
       - name: Install dependencies
         run: npm ci --safe-chain-skip-minimum-package-age
 
-  osv-scan:
-    name: OSV-Scanner
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@a345acffa64b0eaede81a3d9aae6141214d9c8fc  # v2.6.0
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
