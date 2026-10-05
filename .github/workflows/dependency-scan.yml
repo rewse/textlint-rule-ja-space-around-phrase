@@ -30,7 +30,7 @@ jobs:
           node-version: '24'
 
       - name: Setup Aikido Safe Chain
-        uses: rewse/actions/setup-safe-chain@499465b2ad235c5fa2c412f922ad3bf0aff73163  # v1.0.0
+        uses: rewse/actions/setup-safe-chain@f4009aabb158e08d02f739dce2ebf7aecd0a779f  # v1.1.1
 
       - name: Install dependencies
         run: npm ci --safe-chain-skip-minimum-package-age
