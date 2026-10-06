@@ -42,3 +42,7 @@ The project defends against npm supply-chain attacks in three layers; keep all o
 3. OSV-Scanner checks known vulnerabilities in CI (`dependency-scan.yml`). Run `osv-scanner --lockfile package-lock.json` locally whenever `package-lock.json` changes. Vulnerable transitive dependencies are pinned through `overrides` in `package.json`.
 
 Before adding a dependency, check its maintenance status, adoption, and known vulnerabilities. When updating one, read its changelog, run OSV-Scanner, and run the tests. Report security issues in this project through a GitHub Security Advisory, not a public issue.
+
+## Validation
+
+Before pushing, run `uvx pre-commit run --all-files`, `npm run build`, and `npm test`, and commit any files the hooks reformat. Stage new files first, because `--all-files` skips untracked files. CI runs the same hooks, and `core.hooksPath` points at git-defender, so `pre-commit install` cannot run them at commit time.
