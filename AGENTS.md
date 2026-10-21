@@ -22,7 +22,7 @@ User-facing error messages are written in Japanese; everything else in code (com
 ## Build and test
 
 - `src/` is ESM source; `npm run build` (textlint-scripts) emits CommonJS to `lib/`, which is git-ignored and is the published entry point. Both `lib/` and `src/` are published.
-- `npm test` runs `test/example-test.js` (textlint-tester valid/invalid cases), `test/pbt-test.js` (fast-check property-based tests), and `test/kernel-test.js`, which fixes `test/fixtures/test-input.md` through `@textlint/kernel` and compares the result with `test/fixtures/test-expected.md`. Add cases to the example and property tests when changing spacing behavior, and update the expected fixture when fix output intentionally changes.
+- `npm test` runs `test/example-test.js` (textlint-tester valid/invalid cases), `test/pbt-test.js` (fast-check property-based tests), `test/performance-test.js` (time bounds that catch super-linear regex backtracking on long whitespace runs), and `test/kernel-test.js`, which fixes `test/fixtures/test-input.md` through `@textlint/kernel` and compares the result with `test/fixtures/test-expected.md`. Add cases to the example and property tests when changing spacing behavior, and update the expected fixture when fix output intentionally changes.
 - Test files are transpiled by textlint-scripts' Babel setup, which rejects `fs` calls it cannot evaluate statically; read files with `fs/promises` in tests.
 
 ## Coding style

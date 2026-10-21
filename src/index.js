@@ -59,9 +59,15 @@ const FULL_WIDTH_SYMBOLS = new Set(
  * A half-width sequence starts and ends with an ASCII letter or digit and may
  * contain any printable ASCII in between. Surrounding spaces are captured so
  * that the boundary spacing can be inspected.
+ *
+ * The lookbehind lets a match start only at the beginning of a whitespace
+ * run. Without it, a long run that no letter or digit follows is rescanned
+ * from every position inside it, which takes quadratic time. A start inside
+ * a run can succeed only when the start of the run would, so the matches are
+ * the same.
  */
 const HALF_WIDTH_SEQUENCE =
-  /[ \t]*[a-zA-Z0-9](?:[\x20-\x7e\t]*[a-zA-Z0-9])?[ \t]*/g;
+  /(?<![ \t])[ \t]*[a-zA-Z0-9](?:[\x20-\x7e\t]*[a-zA-Z0-9])?[ \t]*/g;
 
 const BOUNDARY_SPACE = /[ \t]/;
 
