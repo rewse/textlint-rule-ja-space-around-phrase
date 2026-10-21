@@ -43,7 +43,7 @@
     "textlint": ">=15.0.0"
   },
   "dependencies": {
-    "textlint-rule-helper": ">=2.5.0"
+    "textlint-rule-helper": "^2.5.0"
   },
   "devDependencies": {
     "@textlint/textlint-plugin-markdown": "^15.5.0",
