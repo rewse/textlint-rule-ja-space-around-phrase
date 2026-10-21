@@ -37,7 +37,7 @@ Releases are automated. Bump the version with `npm run release:patch` (or `relea
 
 The project defends against npm supply-chain attacks in three layers; keep all of them intact when editing workflows or dependencies.
 
-1. Aikido Safe Chain blocks packages published less than 96 hours ago. Workflows that install dependencies set it up and pass `SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 96` to `npm ci` (the scheduled security scan deliberately skips the age check). Use the same 96-hour threshold when choosing a version to add or update locally.
+1. Aikido Safe Chain blocks packages published less than 96 hours ago. Workflows that install dependencies set it up and pass `SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 96` to `npm ci` (the Safe Chain job in `dependency-scan.yml` deliberately skips the age check, because it only scans the tree and runs none of it). Use the same 96-hour threshold when choosing a version to add or update locally.
 2. `.npmrc` sets `ignore-scripts=true`, so dependency lifecycle scripts never run. No current dependency needs one. If a dependency that requires install scripts (typically a native module) is ever added, allow it explicitly with [@lavamoat/allow-scripts](https://github.com/LavaMoat/LavaMoat/tree/main/packages/allow-scripts) and keep that allowlist minimal; prefer a pure-JS alternative when one exists.
 3. OSV-Scanner checks known vulnerabilities in CI (`dependency-scan.yml`). Run `osv-scanner --lockfile package-lock.json` locally whenever `package-lock.json` changes. Vulnerable transitive dependencies are pinned through `overrides` in `package.json`.
 

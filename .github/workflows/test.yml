@@ -31,7 +31,9 @@ jobs:
         uses: rewse/actions/setup-safe-chain@0adf8f4c7fff77793a917e1f063d2e5094a6b6d0  # v1.1.2
 
       - name: Install dependencies
-        run: npm ci --safe-chain-skip-minimum-package-age
+        env:
+          SAFE_CHAIN_MINIMUM_PACKAGE_AGE_HOURS: 96
+        run: npm ci
 
       - name: Build
         run: npm run build
