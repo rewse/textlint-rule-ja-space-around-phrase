@@ -1,11 +1,3 @@
-# braces has no fixed release. It reaches only the build, through
-# textlint-scripts > @babel/cli > chokidar, which expands glob patterns
-# from this repository rather than from untrusted input.
-[[IgnoredVulns]]
-id = "GHSA-vfj7-8cjw-p6xm"
-ignoreUntil = 2027-01-07
-reason = "No fixed braces release; dev-only dependency of the build that expands only this repository's glob patterns"
-
 # glob and minimatch are fixed only in new major releases (glob 14.0.2,
 # minimatch 11.0.1), while textlint requires glob ^13 and the build and test
 # tools pin older majors. textlint and the dev tools expand only file
