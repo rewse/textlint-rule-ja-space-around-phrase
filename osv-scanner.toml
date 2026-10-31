@@ -5,3 +5,20 @@
 id = "GHSA-vfj7-8cjw-p6xm"
 ignoreUntil = 2027-01-07
 reason = "No fixed braces release; dev-only dependency of the build that expands only this repository's glob patterns"
+
+# glob and minimatch are fixed only in new major releases (glob 14.0.2,
+# minimatch 11.0.1), while textlint requires glob ^13 and the build and test
+# tools pin older majors. textlint and the dev tools expand only file
+# patterns from this repository or the textlint command line, and textlint
+# never hands glob an AbortSignal, so neither the cancellation bypass nor the
+# pattern-driven DoS is reachable from untrusted input. Drop these entries
+# once the dependents move to the fixed majors.
+[[IgnoredVulns]]
+id = "GHSA-3g3m-2fjr-6pw4"
+ignoreUntil = 2026-12-31
+reason = "Fixed only in glob 14, which textlint and the dev tools do not accept yet; textlint passes glob no AbortSignal"
+
+[[IgnoredVulns]]
+id = "GHSA-g3hv-75wg-m249"
+ignoreUntil = 2026-12-31
+reason = "Fixed only in minimatch 11, which its dependents do not accept yet; patterns come only from this repository or the textlint command line"
