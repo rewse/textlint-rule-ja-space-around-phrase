@@ -1,16 +1,11 @@
-# glob and minimatch are fixed only in new major releases (glob 14.0.2,
-# minimatch 11.0.1), while textlint requires glob ^13 and the build and test
-# tools pin older majors. textlint and the dev tools expand only file
-# patterns from this repository or the textlint command line, and textlint
-# never hands glob an AbortSignal, so neither the cancellation bypass nor the
-# pattern-driven DoS is reachable from untrusted input. Drop these entries
-# once the dependents move to the fixed majors.
-[[IgnoredVulns]]
-id = "GHSA-3g3m-2fjr-6pw4"
-ignoreUntil = 2026-12-31
-reason = "Fixed only in glob 14, which textlint and the dev tools do not accept yet; textlint passes glob no AbortSignal"
-
+# GHSA-g3hv-75wg-m249 is fixed only in minimatch 11. The overrides in
+# package.json move every minimatch 9 and 10 copy to 11, but @babel/cli's
+# glob 7 needs minimatch 3 and jake's filelist needs minimatch 5, whose
+# function-style API minimatch 11 no longer provides. Those two majors have no
+# globParts preprocessing (firstPhasePreProcess), which is where the
+# amplification happens, and both expand only patterns from this repository.
+# Drop this entry once the build tools stop depending on them.
 [[IgnoredVulns]]
 id = "GHSA-g3hv-75wg-m249"
 ignoreUntil = 2026-12-31
-reason = "Fixed only in minimatch 11, which its dependents do not accept yet; patterns come only from this repository or the textlint command line"
+reason = "Only minimatch 3 and 5 remain, which lack the vulnerable globParts preprocessing; dev-only build tools that expand this repository's patterns"
