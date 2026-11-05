@@ -29,7 +29,7 @@ jobs:
           node-version: '24'
 
       - name: Setup Aikido Safe Chain
-        uses: rewse/actions/setup-safe-chain@0d135e777b83f37d11136115713ee84b9d779b31  # v1.1.5
+        uses: rewse/actions/setup-safe-chain@90d01bd07cb0cb6f5fb1dcb89a01b3165bb50c2b  # v1.1.8
 
       - name: Install dependencies
         env:
