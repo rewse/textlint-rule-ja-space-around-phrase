@@ -38,5 +38,16 @@ describe('performance', function() {
       assert.ok(elapsedMs < TIME_LIMIT_MS,
           `linting took ${elapsedMs.toFixed(0)} ms (limit ${TIME_LIMIT_MS} ms)`);
     });
+
+    it(`should lint a phrase with a long run of ${name} in linear time`,
+        async function() {
+          const text = `あa${space.repeat(RUN_LENGTH)}bい\n`;
+          const {messages, elapsedMs} = await timedLint(text);
+          // The phrase needs a space before and after it.
+          assert.strictEqual(messages.length, 2);
+          assert.ok(elapsedMs < TIME_LIMIT_MS,
+              `linting took ${elapsedMs.toFixed(0)} ms ` +
+              `(limit ${TIME_LIMIT_MS} ms)`);
+        });
   }
 });

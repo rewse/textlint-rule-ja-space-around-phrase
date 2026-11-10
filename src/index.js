@@ -57,17 +57,22 @@ const FULL_WIDTH_SYMBOLS = new Set(
 
 /**
  * A half-width sequence starts and ends with an ASCII letter or digit and may
- * contain any printable ASCII in between. Surrounding spaces are captured so
- * that the boundary spacing can be inspected.
+ * contain any printable ASCII in between. The leading spaces, the sequence
+ * itself, and the trailing spaces are captured as separate groups so that the
+ * boundary spacing can be inspected.
  *
  * The lookbehind lets a match start only at the beginning of a whitespace
  * run. Without it, a long run that no letter or digit follows is rescanned
  * from every position inside it, which takes quadratic time. A start inside
  * a run can succeed only when the start of the run would, so the matches are
  * the same.
+ *
+ * The groups also keep trimming linear. Stripping the surrounding spaces with
+ * a pattern such as /[ \t]+$/ afterwards rescans a whitespace run inside the
+ * sequence from every position in it, which is quadratic in the run length.
  */
 const HALF_WIDTH_SEQUENCE =
-  /(?<![ \t])[ \t]*[a-zA-Z0-9](?:[\x20-\x7e\t]*[a-zA-Z0-9])?[ \t]*/g;
+  /(?<![ \t])([ \t]*)([a-zA-Z0-9](?:[\x20-\x7e\t]*[a-zA-Z0-9])?)([ \t]*)/g;
 
 const BOUNDARY_SPACE = /[ \t]/;
 
@@ -134,10 +139,9 @@ function isSpacingTarget(char) {
 function findHalfWidthSequences(text) {
   const sequences = [];
   for (const match of text.matchAll(HALF_WIDTH_SEQUENCE)) {
-    const raw = match[0];
-    const trimmed = raw.replace(/^[ \t]+|[ \t]+$/g, '');
-    const leadingSpaces = raw.indexOf(trimmed);
-    const trailingSpaces = raw.length - leadingSpaces - trimmed.length;
+    const [raw, leading, trimmed, trailing] = match;
+    const leadingSpaces = leading.length;
+    const trailingSpaces = trailing.length;
 
     sequences.push({
       text: trimmed,
