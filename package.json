@@ -46,10 +46,10 @@
     "textlint-rule-helper": "^2.5.0"
   },
   "devDependencies": {
-    "@textlint/textlint-plugin-markdown": "^15.5.0",
+    "@textlint/textlint-plugin-markdown": "^16.1.2",
     "@textlint/types": ">=15.4.0",
     "fast-check": ">=4.3.0",
-    "textlint-scripts": "^15.5.2"
+    "textlint-scripts": "^16.1.2"
   },
   "overrides": {
     "@babel/plugin-transform-modules-systemjs": "^7.29.4",
