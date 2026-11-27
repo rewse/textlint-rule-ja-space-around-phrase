@@ -1,7 +1,7 @@
 import assert from 'assert';
 import {TextlintKernel} from '@textlint/kernel';
-import MarkdownPlugin from '@textlint/textlint-plugin-markdown';
 import rule from '../src/index';
+import {loadMarkdownPlugin} from './helpers/markdown-plugin';
 
 // A whitespace run of this length takes several seconds when the half-width
 // sequence pattern can start a match at every position inside the run, and
@@ -16,11 +16,12 @@ const TIME_LIMIT_MS = 1500;
  *     the time spent linting.
  */
 async function timedLint(text) {
+  const plugin = await loadMarkdownPlugin();
   const start = process.hrtime.bigint();
   const result = await new TextlintKernel().lintText(text, {
     filePath: 'test.md',
     ext: '.md',
-    plugins: [{pluginId: 'markdown', plugin: MarkdownPlugin}],
+    plugins: [{pluginId: 'markdown', plugin}],
     rules: [{ruleId: 'ja-space-around-phrase', rule: rule}],
   });
   const elapsedMs = Number(process.hrtime.bigint() - start) / 1e6;

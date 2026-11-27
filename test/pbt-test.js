@@ -1,7 +1,7 @@
 import {TextlintKernel} from '@textlint/kernel';
-import MarkdownPlugin from '@textlint/textlint-plugin-markdown';
 import fc from 'fast-check';
 import rule from '../src/index';
+import {loadMarkdownPlugin} from './helpers/markdown-plugin';
 
 const kernel = new TextlintKernel();
 
@@ -17,7 +17,7 @@ async function lint(text) {
     plugins: [
       {
         pluginId: 'markdown',
-        plugin: MarkdownPlugin,
+        plugin: await loadMarkdownPlugin(),
       },
     ],
     rules: [
